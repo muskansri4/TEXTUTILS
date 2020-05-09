@@ -1,0 +1,67 @@
+from django.http import HttpResponse
+from django.shortcuts import render
+
+def index(request):
+     return render(request, 'index.html')
+    #return HttpResponse("about om")
+
+def analyse(request):
+    #get the text
+    djtext=request.GET.get('text', 'default')
+    removepunc=request.GET.get('removepunc', 'off')
+    newline = request.GET.get('newline', 'off')
+    fullcaps = request.GET.get('fullcaps', 'off')
+    removespace = request.GET.get('removespace', 'off')
+    charcount = request.GET.get('charcount', 'off')
+    punc='''!()-[]{};:'"\,<>.?/'''
+    analyzed = " "
+    if removepunc == 'on':
+
+      for char in djtext:
+        if char not in punc:
+            analyzed = analyzed + char
+
+      print (analyzed)
+      params={'purpose':'Removed punctuation', 'analyzed_text': analyzed}
+      return render(request, 'analyse.html', params)
+    elif(fullcaps=="on"):
+        analyzed = " "
+        for char in djtext:
+            analyzed = analyzed + char.upper()
+        params = {'purpose': 'Captalised', 'analyzed_text': analyzed}
+        return render(request, 'analyse.html', params)
+    elif(newline=="on"):
+        analyzed = " "
+        for char in djtext:
+           if char !="\n":
+            analyzed = analyzed + char
+        params = {'purpose': 'newline', 'analyzed_text': analyzed}
+        return render(request, 'analyse.html', params)
+    elif (removespace == "on"):
+        analyzed = " "
+        for i,char in enumerate(djtext):
+            if djtext[i]==" " :
+                pass
+            else:
+                analyzed = analyzed + char
+        params = {'purpose': 'removespace', 'analyzed_text': analyzed}
+        return render(request, 'analyse.html', params)
+    elif (charcount == "on"):
+        analyzed = " "
+        l=len(djtext)
+        params = {'purpose': 'removespace', 'analyzed_text': l}
+        return render(request, 'analyse.html', params)
+
+    else:
+        return HttpResponse("error")
+
+    #got the text
+    return HttpResponse("remove punc")
+
+def capt(request):
+    return HttpResponse("remove capt <a href='/'>return to home page</a>")
+def ex1(request):
+    s='''<h1>NAVIGATION BAR</h1>
+    <a href="https://www.google.com/">google</a>'''
+    return HttpResponse(s)
+
